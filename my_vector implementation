@@ -1,0 +1,153 @@
+class my_vector
+{
+    int capacity;
+    int size;
+    int* ptr_data;
+
+public:
+    my_vector() : capacity(0), size(0), ptr_data(nullptr) {}
+    my_vector(int cap) : capacity(cap), size(0)
+    {
+        ptr_data = new int[capacity];
+    }
+    my_vector(const my_vector& obj)
+    {
+        capacity = obj.capacity;
+        size = obj.size;
+        ptr_data = new int[capacity];
+        for (int i = 0; i < size; ++i)
+        {
+            ptr_data[i] = obj.ptr_data[i];
+        }
+    }
+    my_vector(my_vector&& obj)
+    {
+        capacity = obj.capacity;
+        size = obj.size;
+        ptr_data = obj.ptr_data;
+        obj.ptr_data = nullptr;
+        obj.capacity = 0;
+        obj.size = 0;
+    }
+    ~my_vector()
+    {
+        delete_helper(*this);
+    }
+
+public:
+    my_vector& operator=(const my_vector& obj)
+    {
+        if (this == &obj)
+        {
+            return *this;
+        }
+        if (ptr_data != nullptr)
+        {
+            delete[] ptr_data;
+        }
+        capacity = obj.capacity;
+        size = obj.size;
+        ptr_data = new int[capacity];
+        for (int i = 0; i < size; ++i)
+        {
+            ptr_data[i] = obj.ptr_data[i];
+        }
+        return *this;
+    }
+    my_vector& operator=(my_vector&& obj)
+    {
+        if (ptr_data != nullptr)
+        {
+            delete[] ptr_data;
+        }
+        capacity = obj.capacity;
+        size = obj.size;
+        ptr_data = obj.ptr_data;
+        obj.ptr_data = nullptr;
+        obj.capacity = 0;
+        obj.size = 0;
+        return *this;
+    }
+    my_vector operator+(const my_vector& obj)
+    {
+        if (size != obj.size)
+        {
+            return *this;
+        }
+        my_vector tmp(size);
+        for (int i = 0; i < tmp.capacity; ++i)
+        {
+            tmp.ptr_data[i] = ptr_data[i] + obj.ptr_data[i];
+        }
+        tmp.size = tmp.capacity;
+        return tmp;
+    }
+    my_vector& operator+=(const my_vector& obj)
+    {
+        if (size != obj.size)
+        {
+            return *this;
+        }
+        for (int i = 0; i < size; ++i)
+        {
+            ptr_data[i] += obj.ptr_data[i];
+        }
+        return *this;
+    }
+    int& operator[](int i)
+    {
+        return ptr_data[i];
+    }
+    friend std::ostream& operator<<(std::ostream& os, const my_vector& obj)
+    {
+        for (int i = 0; i < obj.size; ++i)
+        {
+            os << obj.ptr_data[i];
+        }
+        return os;
+    }
+
+private:
+    void delete_helper(my_vector& obj)
+    {
+        obj.capacity = 0;
+        obj.size = 0;
+        delete[] obj.ptr_data;
+        obj.ptr_data = nullptr;
+    }
+
+public:
+    void push_back(const int data)
+    {
+        if (ptr_data == nullptr)
+        {
+            capacity = 1;
+            size = 1;
+            ptr_data = new int[capacity];
+            ptr_data[size - 1] = data;
+        }
+        else if (capacity > (size + 1))
+        {
+            ++size;
+            ptr_data[size - 1] = data;
+        }
+        else if (capacity <= (size + 1))
+        {
+            capacity *= 2;
+            ++size;
+            int* tmp = new int[capacity];
+            for (int i = 0; i < size - 1; ++i)
+            {
+                tmp[i] = ptr_data[i];
+            }
+            tmp[size - 1] = data;
+            delete[] ptr_data;
+            ptr_data = tmp;
+        }
+    }
+    int length() const
+    {
+        return size;
+    }
+
+};
