@@ -149,5 +149,24 @@ public:
     {
         return size;
     }
-
+    int find_by_value(const int data) const
+    {
+        for (int i = 0; i < size; ++i)
+        {
+            if (ptr_data[i] == data)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    void remove_by_value(const int data)
+    {
+        unsigned int index = find_by_value(data);
+        for (int i = index; i + 1 < size; ++i)
+        {
+            ptr_data[i] = ptr_data[i + 1];
+        }
+        --size;
+    }
 };
