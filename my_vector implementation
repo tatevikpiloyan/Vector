@@ -121,8 +121,8 @@ public:
     {
         if (ptr_data == nullptr)
         {
-            capacity = 1;
-            size = 1;
+            ++capacity;
+            ++size;
             ptr_data = new int[capacity];
             ptr_data[size - 1] = data;
         }
