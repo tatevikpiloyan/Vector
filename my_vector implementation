@@ -162,11 +162,53 @@ public:
     }
     void remove_by_value(const int data)
     {
-        unsigned int index = find_by_value(data);
+        int index = find_by_value(data);
+        if (index >= capacity || index < 0)
+        {
+            return;
+        }
         for (int i = index; i + 1 < size; ++i)
         {
             ptr_data[i] = ptr_data[i + 1];
         }
         --size;
+    }
+    void insert(int index, int data)
+    {
+        if (index >= capacity || index < 0)
+        {
+            return;
+        }
+        if (capacity > (size + 1))
+        {
+            for (int i = size; i >= index; --i)
+            {
+                if (i == index)
+                {
+                    ptr_data[i] = data;
+                    continue;
+                }
+                ptr_data[i] = ptr_data[i - 1];
+            }
+            ++size;
+        }
+        else if (capacity <= (size + 1))
+        {
+            capacity *= 2;
+            ++size;
+            int* tmp = new int[capacity];
+            for (int i = 0, j = 0; i < size;  ++i, ++j)
+            {
+                if (i == index)
+                {
+                    tmp[i] = data;
+                    --j;
+                    continue;
+                }
+                tmp[i] = ptr_data[j];
+            }
+            delete[] ptr_data;
+            ptr_data = tmp;
+        }
     }
 };
